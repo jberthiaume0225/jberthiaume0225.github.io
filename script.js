@@ -286,6 +286,25 @@ function clearSelection() {
     updateSelectionCount();
 }
 
+// Layout toggle functionality
+function toggleLayout() {
+    isListView = !isListView;
+    const toggleBtn = document.getElementById('toggle-layout');
+    const container = document.getElementById('pokemon-images');
+    
+    if (isListView) {
+        container.classList.add('list-view');
+        toggleBtn.textContent = 'Switch to Grid View';
+        localStorage.setItem('preferredLayout', 'list');
+    } else {
+        container.classList.remove('list-view');
+        toggleBtn.textContent = 'Switch to List View';
+        localStorage.setItem('preferredLayout', 'grid');
+    }
+    
+    renderPokemonImages();
+}
+
 // This is creating the pokemon images in the pokedex. It is creating a div for each pokemon and then adding the image to it.
 function renderPokemonImages() {
     const container = document.getElementById('pokemon-images');
@@ -293,10 +312,16 @@ function renderPokemonImages() {
     const genData = generationGameData[currentGeneration];
     const start = genData.start;
     const count = genData.count;
+    
     for (let i = start; i < start + count; i++) {
         const imgDiv = document.createElement('div');
         imgDiv.className = 'pokemon-image';
         imgDiv.setAttribute('data-poke-index', i);
+
+        // Add list item class if in list view
+        if (isListView) {
+            imgDiv.classList.add('list-item');
+        }
 
         // Highlight if caught
         if (localStorage.getItem('caught-' + i) === 'true') {
@@ -314,27 +339,72 @@ function renderPokemonImages() {
         img.title = `#${i} ${pokeName}`;
 
         img.onerror = function () {
-            imgDiv.innerHTML = '';
             const placeholder = document.createElement('div');
             placeholder.className = 'pokemon-placeholder';
             placeholder.textContent = '?';
             placeholder.title = `#${i} ${pokeName}`;
-            imgDiv.appendChild(placeholder);
+            if (isListView) {
+                // In list view, replace the img with placeholder
+                img.style.display = 'none';
+                imgDiv.insertBefore(placeholder, img);
+            } else {
+                // In grid view, replace entire content
+                imgDiv.innerHTML = '';
+                imgDiv.appendChild(placeholder);
+            }
         };
 
         imgDiv.appendChild(img);
 
-        // Add origin badges if set in localStorage
-        const marksData = localStorage.getItem('origin-marks-' + i);
-        if (marksData) {
-            const marks = JSON.parse(marksData);
-            marks.forEach(mark => {
-                const badge = document.createElement('img');
-                badge.src = `./origin-marks/${mark}.png`;
-                badge.alt = mark.replace(/_/g, ' ');
-                badge.className = 'origin-badge';
-                imgDiv.appendChild(badge);
-            });
+        // Add list view info
+        if (isListView) {
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'pokemon-info';
+            
+            const nameEl = document.createElement('p');
+            nameEl.className = 'pokemon-name';
+            nameEl.textContent = pokeName;
+            
+            const numberEl = document.createElement('p');
+            numberEl.className = 'pokemon-number';
+            numberEl.textContent = `#${i.toString().padStart(3, '0')}`;
+            
+            const statusDiv = document.createElement('div');
+            statusDiv.className = 'pokemon-status';
+            
+            if (localStorage.getItem('caught-' + i) === 'true') {
+                const caughtBadge = document.createElement('span');
+                caughtBadge.className = 'status-badge caught';
+                caughtBadge.textContent = 'Caught';
+                statusDiv.appendChild(caughtBadge);
+            }
+            
+            if (localStorage.getItem('evolution-' + i) === 'true') {
+                const evolutionBadge = document.createElement('span');
+                evolutionBadge.className = 'status-badge evolution';
+                evolutionBadge.textContent = 'Evolution';
+                statusDiv.appendChild(evolutionBadge);
+            }
+            
+            infoDiv.appendChild(nameEl);
+            infoDiv.appendChild(numberEl);
+            infoDiv.appendChild(statusDiv);
+            imgDiv.appendChild(infoDiv);
+        }
+
+        // Add origin badges if set in localStorage (only for grid view)
+        if (!isListView) {
+            const marksData = localStorage.getItem('origin-marks-' + i);
+            if (marksData) {
+                const marks = JSON.parse(marksData);
+                marks.forEach(mark => {
+                    const badge = document.createElement('img');
+                    badge.src = `./origin-marks/${mark}.png`;
+                    badge.alt = mark.replace(/_/g, ' ');
+                    badge.className = 'origin-badge';
+                    imgDiv.appendChild(badge);
+                });
+            }
         }
 
         container.appendChild(imgDiv);
@@ -589,6 +659,19 @@ window.onload = function () {
     });
 
     document.getElementById('clear-selection').addEventListener('click', clearSelection);
+
+    // Layout toggle functionality
+    document.getElementById('toggle-layout').addEventListener('click', toggleLayout);
+
+    // Restore preferred layout
+    const savedLayout = localStorage.getItem('preferredLayout');
+    if (savedLayout === 'list') {
+        isListView = true;
+        const container = document.getElementById('pokemon-images');
+        const toggleBtn = document.getElementById('toggle-layout');
+        container.classList.add('list-view');
+        toggleBtn.textContent = 'Switch to Grid View';
+    }
 };
 
 function getAllImageFilenamesForPokemon(baseNum) {
@@ -608,6 +691,7 @@ let detailsImages = [];
 let detailsImageIndex = 0;
 let isMultiSelectMode = false;
 let selectedPokemon = new Set();
+let isListView = false;
 
 // Used when opening the details
 function showPokemondetails(pokemonNumber) {

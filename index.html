@@ -7,7 +7,6 @@
     <title>My Web Page</title>
 
     <!-- reference and load css and js -->
-    <script defer src="themegen.js?v=1117"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -109,21 +108,23 @@
             <span id="caught-counter" style="margin-left: 16px; color: #fff; font-weight: bold;">Caught: 0/0</span>
         </div>
 
+        <div id="layout-controls" style="margin: 16px 0; text-align: center;">
+            <button id="toggle-layout" style="background-color: #9b59b6; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; margin-right: 10px;">
+                Switch to List View
+            </button>
+        </div>
+        
         <div id="multi-select-controls" style="margin: 16px 0; text-align: center; display: none;">
-            <button id="toggle-multi-select"
-                style="background-color: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; margin-right: 10px;">
+            <button id="toggle-multi-select" style="background-color: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; margin-right: 10px;">
                 Enable Multi-Select
             </button>
-            <button id="mark-selected-caught"
-                style="background-color: #2ecc40; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; margin-right: 10px; display: none;">
+            <button id="mark-selected-caught" style="background-color: #2ecc40; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; margin-right: 10px; display: none;">
                 Mark Selected as Caught
             </button>
-            <button id="mark-selected-uncaught"
-                style="background-color: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; margin-right: 10px; display: none;">
+            <button id="mark-selected-uncaught" style="background-color: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; margin-right: 10px; display: none;">
                 Mark Selected as Not Caught
             </button>
-            <button id="clear-selection"
-                style="background-color: #95a5a6; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; display: none;">
+            <button id="clear-selection" style="background-color: #95a5a6; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; display: none;">
                 Clear Selection
             </button>
             <div id="selection-count" style="margin-top: 8px; color: #fff; font-weight: bold; display: none;">
@@ -202,8 +203,7 @@
     <div id="settings-page" class="left-nav-panel" style="display:none;">
         <h2>Settings</h2>
         <div style="margin: 20px; text-align: center;">
-            <button id="reset-pokedex-btn"
-                style="background-color: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px;">
+            <button id="reset-pokedex-btn" style="background-color: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px;">
                 Reset All Pokédex Data
             </button>
             <p style="margin-top: 10px; color: #666; font-size: 14px;">
