@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>My Web Page</title>
+
+    <!-- reference and load css and js -->
+    <script defer src="themegen.js?v=1117"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="sidebar" class="sidebar">
+        <button onclick="showDiv('home-page')">Home</button>
+        <button onclick="showDiv('pokedex')">Pokédex</button>
+        <button onclick="showDiv('tools-page')">Tools</button>
+        <button onclick="showDiv('settings-page')">Settings</button>
+
+        <div class="themes-container" id="themes-container">
+            <p class="normal-font" style="color: var(--subfont); margin-bottom: 3px;" id="cur-theme-name">Light
+            </p>
+            <div class="themes" id="themes-bar">
+                <!-- <div id="create-a-theme" class="hint--bottom-right hint--no-shadow" aria-label="Create a theme! [Click x2]"></div> -->
+                <div id="light-mode"></div>
+                <div id="dark-mode"></div>
+                <div id="pokeball-mode"></div>
+                <div id="greatball-mode"></div>
+                <div id="ultraball-mode"></div>
+                <div id="masterball-mode"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <button id="sidebar-toggle" class="sidebar-toggle">&#9776;</button>
+
+    <div class="right-dropdown">
+        <button class="dropdown-toggle">Menu &#x25BC;</button>
+        <div class="dropdown-content">
+            <a href="#" id="type-chart-btn">Type Chart</a>
+            <!-- Add more dropdown links here if needed -->
+        </div>
+    </div>
+
+    <!-- Large Hover Screen -->
+    <div class="hover-backdrop" id="popup-screen" style="display: none;">
+        <div class="hover-screen">
+            <div class="hover-screen-content">
+            </div>
+        </div>
+        <div class="hover-screen-close-button"><span class="material-symbols-outlined"
+                style="font-size: 40px; display: flex; align-items: center; justify-content: center;">close</span></div>
+    </div>
+
+    <div id="type-chart-details" class="details" style="display:none;">
+        <div class="details-content type-chart-content">
+            <span class="details-close" id="type-chart-close">&times;</span>
+            <h2 style="color:#fff;text-align:center;">Pokémon Type Chart</h2>
+            <div id="type-chart-table"></div>
+        </div>
+    </div>
+
+    <div id="home-page" class="left-nav-panel" style="display: none;">
+        <div class="margin: 24px 0 12px 0; text-align: center;">
+            <h2>Welcome to the Home Page!</h2>
+            <p>I am planning on adding the following features:</p><br>
+            <p><s>Before all else........GET THE PAGES WORKING!!!!</s></p>
+            <p>1. Ability to cycle through different pokemon forms.</p>
+            <p>2. Ability to change sprite generation. Gen 1 sprites, Gen 2 sprites, etc. up to the current pokemon home
+                sprites.</p>
+            <p>3. Theming options for the interface. This would include modifying the sprites as well.</p>
+            <p>4. A toggle for viewing Shiny Pokémon.</p>
+            <p>5. Ability to export data for site to import or backup.</p>
+            <p>6. Ability to import data from a file.</p>
+            <p>7. Make the pokedex look more like, well, a pokedex.</p>
+            <p>8. Add a search bar to the pokedex.</p>
+            <p>9. Add settings for fonts.</p>
+            <p><s>10. Add a button to clear all pokedex information.</s></p>
+            <p>11. Add animations to display after completing a generation.</p>
+            <p><s>12. Add a way to modify pokedex en mass</s></p>
+            <p>13. Possibly move the data stored in pokemonData.js into a database for easier management.</p>
+            <p>14. Add a way to view Pokémon in a list format.</p>
+            <p>15. Add additional tools that can be used on the site.</p>
+            <p>16. Account for origin marks eligibility. (dont let user set the mark if its not possible to get)</p>
+            <p>17. Add an indicator for where a pokemon is stored (home, a game, lended out to a friend)</p>
+            <p>18. Implement settings to hide different parts of data if unneeded.</p>
+        </div>
+    </div>
+
+    <div id="pokedex" class="left-nav-panel" style="display:none;">
+        <div id="gen-game-selector" style="margin: 24px 0 12px 0; text-align: center;">
+            <label>
+                Generation:
+                <select id="generation-select">
+                    <option value="all-generations">Show All</option>
+                    <option value="generation-i">Generation 1</option>
+                    <option value="generation-ii">Generation 2</option>
+                    <option value="generation-iii">Generation 3</option>
+                    <option value="generation-iv">Generation 4</option>
+                    <option value="generation-v">Generation 5</option>
+                    <option value="generation-vi">Generation 6</option>
+                    <option value="generation-vii">Generation 7</option>
+                    <option value="generation-viii">Generation 8</option>
+                    <option value="generation-ix">Generation 9</option>
+                </select>
+            </label>
+            <span id="caught-counter" style="margin-left: 16px; color: #fff; font-weight: bold;">Caught: 0/0</span>
+        </div>
+
+        <div id="multi-select-controls" style="margin: 16px 0; text-align: center; display: none;">
+            <button id="toggle-multi-select"
+                style="background-color: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; margin-right: 10px;">
+                Enable Multi-Select
+            </button>
+            <button id="mark-selected-caught"
+                style="background-color: #2ecc40; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; margin-right: 10px; display: none;">
+                Mark Selected as Caught
+            </button>
+            <button id="mark-selected-uncaught"
+                style="background-color: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; margin-right: 10px; display: none;">
+                Mark Selected as Not Caught
+            </button>
+            <button id="clear-selection"
+                style="background-color: #95a5a6; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; display: none;">
+                Clear Selection
+            </button>
+            <div id="selection-count" style="margin-top: 8px; color: #fff; font-weight: bold; display: none;">
+                Selected: 0
+            </div>
+        </div>
+
+        <div class="pokemon-images" id="pokemon-images"></div>
+
+        <div id="pokemon-details" class="details" style="display:none;">
+            <div class="details-content">
+                <span class="details-close" id="details-close">&times;</span>
+
+                <div style="display:flex; align-items:center; justify-content:center; gap:12px;">
+                    <img id="details-img" src="" alt="" style="max-width:220px;">
+                </div>
+                <div id="details-caption"></div>
+                <div id="details-typing"></div>
+                <div id="details-stats"></div>
+
+
+                <div style="text-align:center;margin-bottom:8px;">
+                    <label>
+                        <input type="checkbox" id="details-highlight-checkbox">
+                        Caught!
+                    </label>
+                    <label style="margin-left:16px;">
+                        <input type="checkbox" id="details-evolution-checkbox">
+                        Evolution needed
+                    </label>
+                </div>
+                <div id="origin-marks-row" style="text-align:center;margin-bottom:8px;">
+                    <label>
+                        <input type="checkbox" class="details-origin-checkbox" value="game_boy_origin_mark">
+                        Game Boy
+                    </label>
+                    <label>
+                        <input type="checkbox" class="details-origin-checkbox" value="alola_origin_mark">
+                        Alola
+                    </label>
+                    <label>
+                        <input type="checkbox" class="details-origin-checkbox" value="kalos_hoenn-remake_origin_mark">
+                        Kalos/Hoenn
+                    </label>
+                    <label>
+                        <input type="checkbox" class="details-origin-checkbox" value="lets_go_origin_mark">
+                        Let's Go
+                    </label>
+                    <label>
+                        <input type="checkbox" class="details-origin-checkbox" value="sword_shield_origin_mark">
+                        Sword / Shield
+                    </label>
+                    <br>
+                    <label>
+                        <input type="checkbox" class="details-origin-checkbox" value="legends_arceus_origin_mark">
+                        Legends: Arceus
+                    </label>
+                    <label>
+                        <input type="checkbox" class="details-origin-checkbox" value="bd_sp_origin_mark">
+                        BD / SP
+                    </label>
+                    <br>
+                    <label>
+                        <input type="checkbox" class="details-origin-checkbox" value="scarlet_violet_origin_mark">
+                        Scarlet / Violet
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tools-page" class="left-nav-panel" style="display:none;">
+        <h2>Tools</h2>
+    </div>
+
+    <div id="settings-page" class="left-nav-panel" style="display:none;">
+        <h2>Settings</h2>
+        <div style="margin: 20px; text-align: center;">
+            <button id="reset-pokedex-btn"
+                style="background-color: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px;">
+                Reset All Pokédex Data
+            </button>
+            <p style="margin-top: 10px; color: #666; font-size: 14px;">
+                This will clear all caught status and origin marks for all Pokémon.
+            </p>
+        </div>
+    </div>
+
+    <script src="pokemonData.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
